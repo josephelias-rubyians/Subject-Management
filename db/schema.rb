@@ -10,6 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+
 ActiveRecord::Schema.define(version: 2021_03_17_064332) do
 
   # These are extensions that must be enabled in order to support this database
@@ -93,7 +94,11 @@ ActiveRecord::Schema.define(version: 2021_03_17_064332) do
   end
 
   create_table "users", force: :cascade do |t|
+<<<<<<< HEAD
     t.string "email", default: "", null: false
+=======
+    t.string "email", null: false
+>>>>>>> 5ebedcd5267eb2fd7ae8d9091ef8aa6dce1be598
     t.string "password"
     t.boolean "admin", default: false
     t.datetime "created_at", precision: 6, null: false
