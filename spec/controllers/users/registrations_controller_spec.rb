@@ -7,10 +7,13 @@ describe Users::RegistrationsController, type: :request do
   let (:signup_url) { '/signup' }
   let(:params) do
     {
-      user: {
+      # user: {
         email: user.email,
-        password: user.password
-      }
+        password: user.password,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        age: user.age
+      # }
     }
   end
 
@@ -35,10 +38,13 @@ describe Users::RegistrationsController, type: :request do
   context 'When an email already exists' do
     before do
       post signup_url, params: {
-        user: {
+        # user: {
           email: existing_user.email,
-          password: existing_user.password
-        }
+          password: existing_user.password,
+          firstname: existing_user.firstname,
+          lastname: existing_user.lastname,
+          age: existing_user.age
+        # }
       }
     end
 

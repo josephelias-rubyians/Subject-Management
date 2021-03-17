@@ -17,7 +17,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   private
 
   def configure_sign_up_params
-    params.require(:user).permit(:email, :password, :password_confirmation, :admin)
+    params.permit(:email, :password, :password_confirmation, :admin, :firstname, :lastname, :age, :avatar)
   end
 
   def respond_with(resource, _opts = {})

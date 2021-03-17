@@ -23,10 +23,13 @@ describe Users::SessionsController, type: :request do
   context 'When password is missing' do
     before do
       post login_url, params: {
-        user: {
+        # user: {
           email: user.email,
+          firstname: user.firstname,
+          lastname: user.lastname,
+          age: user.age,
           password: nil
-        }
+        # }
       }
     end
 

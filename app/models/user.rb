@@ -9,6 +9,8 @@ class User < ApplicationRecord
 	has_many :subjects, through: :user_and_subjects
 	has_many :user_classes_subjects, dependent: :destroy
 
+	has_one_attached :avatar
+
 	validates :email, :password, presence: true
 	validates :email, email: true
 	validates :password, length: { in: 6..20 }
