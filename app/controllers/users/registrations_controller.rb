@@ -5,6 +5,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def create
     @user = User.new(configure_sign_up_params)  
     if @user.save
+      sign_up(resource_name, resource)
       render json: @user
     else
       render json: @user.errors, status: :unprocessable_entity
