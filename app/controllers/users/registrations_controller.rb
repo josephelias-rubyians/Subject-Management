@@ -5,11 +5,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def create
     @user = User.new(configure_sign_up_params)  
     if @user.save
-      begin
-        UserMailer.registration_successful(@user).deliver
-      rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError, SocketError => e
-        Rails.logger.error("Failed to send mail...")
-      end
       sign_up(resource_name, resource)
       render json: @user
     else
