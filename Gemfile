@@ -42,6 +42,7 @@ group :development, :test do
   gem 'faker'
   gem 'jsonapi-rspec'
   gem 'foreman'
+  gem 'database_cleaner-active_record'
 end
 
 group :development do
