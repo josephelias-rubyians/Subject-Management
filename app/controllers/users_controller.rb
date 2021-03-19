@@ -47,7 +47,7 @@ class UsersController < ApplicationController
 				bypass_sign_in(@user)
 				render json: {message: "Successfully changed the password."}, status: 200
 			else
-				render json: {error: "Unable to change the password (min 6 chars required)."}, status: 400
+				render json: {error: "Minimum 6 chars required/incorrect confirm password)."}, status: 400
 			end
 		else
 			render json: {error: "Please provide valid current password."}, status: 400
