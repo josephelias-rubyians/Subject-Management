@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+	attr_accessor :current_password
 	after_create :send_email_to_user
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
@@ -12,9 +13,9 @@ class User < ApplicationRecord
 
 	has_one_attached :avatar
 
-	validates :email, :password, presence: true
-	validates :email, email: true
-	validates :password, length: { in: 6..20 }
+	validates :email, :password, presence: true, on: :create
+	validates :email, email: true, on: :create
+	validates :password, length: { in: 6..20 }, on: :create
 
 	private
 	
