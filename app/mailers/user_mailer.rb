@@ -1,5 +1,5 @@
 class UserMailer < ActionMailer::Base
-  default :from => ENV['DEFAULT_MAIL_FROM']
+  default :from => Rails.application.credentials.dig(:default_mail_from)
 
 	def registration_successful(user)
 	  @user = user
