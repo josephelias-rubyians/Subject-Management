@@ -3,18 +3,20 @@ class UsersController < ApplicationController
 	before_action :set_user, only: [:show, :update, :destroy, :update_password]
 
 	def index
-		@users = authorize current_user
-    render json: @users
+		@users = current_user.admin? ? User.all : current_user
+    render json: {status: {code: 200, message: 'Success.'}, data: UserSerializer.new(@users).serializable_hash[:data]}
   end
 
   def show
-    render json: @user if authorize @user
+    if authorize @user
+      render json: {status: {code: 200, message: 'Success.'}, data: UserSerializer.new(@user).serializable_hash[:data][:attributes]}
+    end
   end
 
   def update
     if authorize @user
   		@user.update(user_params)
-  		render json: {message: "Successfully updated the profile."}, status: 200
+      render json: {status: {code: 200, message: 'Successfully updated the profile.'}, data: UserSerializer.new(@user).serializable_hash[:data][:attributes]}
     end
   end
 
@@ -53,7 +55,7 @@ class UsersController < ApplicationController
   	begin
   		@user = User.find(params[:id])
   	rescue Exception => e
-  		render json: {error: "Unable to find the profile."}, status: 400
+      render json: {errors: {user: "Record not found for ID #{params[:id]}"}}, status: 400
   	end
   end
 

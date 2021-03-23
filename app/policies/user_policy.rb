@@ -7,9 +7,9 @@ class UserPolicy
     @user = model
   end
 
-  def index?
-    @current_user.admin? ? User.all : @current_user
-  end
+  # def index?
+  #   @current_user.admin? ? User.all : @current_user
+  # end
 
   def show?
     action_performable?
