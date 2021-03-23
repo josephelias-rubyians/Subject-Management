@@ -37,7 +37,7 @@ describe UsersController, type: :request do
 	    end
 
 	    it 'returns all user records' do
-	    	expect((JSON.parse(response.body)).count).to eq(User.count)
+	    	expect(JSON.parse(response.body)["data"].count).to eq(User.count)
 	    end
 	  end
 
@@ -51,9 +51,9 @@ describe UsersController, type: :request do
 	    end
 
 	    it 'should return the user info' do
-	      expect(JSON.parse(response.body)["firstname"]).to eq(admin.firstname)
-	      expect(JSON.parse(response.body)["lastname"]).to eq(admin.lastname)
-	      expect(JSON.parse(response.body)["email"]).to eq(admin.email)
+	      expect(JSON.parse(response.body)["data"]["firstname"]).to eq(admin.firstname)
+	      expect(JSON.parse(response.body)["data"]["lastname"]).to eq(admin.lastname)
+	      expect(JSON.parse(response.body)["data"]["email"]).to eq(admin.email)
 	    end
 	  end
 
@@ -67,9 +67,9 @@ describe UsersController, type: :request do
 	    end
 
 	    it 'should return the other user info' do
-	      expect(JSON.parse(response.body)["firstname"]).to eq(teacher.firstname)
-	      expect(JSON.parse(response.body)["lastname"]).to eq(teacher.lastname)
-	      expect(JSON.parse(response.body)["email"]).to eq(teacher.email)
+	      expect(JSON.parse(response.body)["data"]["firstname"]).to eq(teacher.firstname)
+	      expect(JSON.parse(response.body)["data"]["lastname"]).to eq(teacher.lastname)
+	      expect(JSON.parse(response.body)["data"]["email"]).to eq(teacher.email)
 	    end
 	  end
 
@@ -190,11 +190,11 @@ describe UsersController, type: :request do
 	    end
 
 	    it 'returns only current user profile' do
-	    	expect(JSON.parse(response.body)).to include("id" => teacher.id)
+	    	expect(JSON.parse(response.body)["data"]["attributes"]).to include("id"=>teacher.id)
 	    end
 
 	    it 'should not contain other user info' do
-	    	expect(JSON.parse(response.body)).not_to include("id" => admin.id)
+	    	expect(JSON.parse(response.body)["data"]["attributes"]).not_to include("id"=>admin.id)
 	    end
 	  end
 
@@ -208,9 +208,9 @@ describe UsersController, type: :request do
 	    end
 
 	    it 'should return the user info' do
-	      expect(JSON.parse(response.body)["firstname"]).to eq(teacher.firstname)
-	      expect(JSON.parse(response.body)["lastname"]).to eq(teacher.lastname)
-	      expect(JSON.parse(response.body)["email"]).to eq(teacher.email)
+	      expect(JSON.parse(response.body)["data"]["firstname"]).to eq(teacher.firstname)
+	      expect(JSON.parse(response.body)["data"]["lastname"]).to eq(teacher.lastname)
+	      expect(JSON.parse(response.body)["data"]["email"]).to eq(teacher.email)
 	    end
 	  end
 
