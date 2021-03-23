@@ -3,7 +3,7 @@ class UserMailer < ActionMailer::Base
 
 	def registration_successful(user)
 	  @user = user
-	  mail(:to => "#{user.firstname} <#{user.email}>", :subject => "Registration Successful")
+	  bootstrap_mail(:to => "#{user.firstname} <#{user.email}>", :subject => "Registration Successful")
 	end
 
 end
