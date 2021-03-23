@@ -3,42 +3,26 @@ class UsersController < ApplicationController
 	before_action :set_user, only: [:show, :update, :destroy, :update_password]
 
 	def index
-		@users = current_user.admin? ? User.all : current_user
+		@users = authorize current_user
     render json: @users
   end
 
   def show
-  	if (@user == current_user) && !(current_user.admin?)
-  		render json: @user
-  	elsif !(@user == current_user) && !(current_user.admin?)
-  		render json: {error: "You are not allowed to view the profile."}, status: 400
-  	else
-  		render json: @user
-  	end
+    render json: @user if authorize @user
   end
 
   def update
-  	if (@user == current_user) && !(current_user.admin?)
+    if authorize @user
   		@user.update(user_params)
   		render json: {message: "Successfully updated the profile."}, status: 200
-  	elsif !(@user == current_user) && !(current_user.admin?)
-  		render json: {error: "You are not allowed to update the profile."}, status: 400
-  	else
-  		@user.update(user_params)
-  		render json: {message: "Successfully updated the profile."}, status: 200
-  	end
+    end
   end
 
   def destroy
-		if (@user == current_user) && !(current_user.admin?)
-  		@user.destroy
-  		render json: {message: "Successfully deleted the profile."}, status: 200
-  	elsif !(@user == current_user) && !(current_user.admin?)
-  		render json: {error: "You are not allowed to delete the profile."}, status: 400
-  	else
-  		@user.destroy
-  		render json: {message: "Successfully deleted the profile."}, status: 200
-  	end
+    if authorize @user
+      @user.destroy
+      render json: {message: "Successfully deleted the profile."}, status: 200
+    end
   end
 
 	def update_password
