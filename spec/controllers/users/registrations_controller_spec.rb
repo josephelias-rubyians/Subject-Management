@@ -1,10 +1,11 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Users::RegistrationsController, type: :request do
-
-  let (:user) { build_user }
-  let (:existing_user) { create_user }
-  let (:signup_url) { '/signup' }
+  let(:user) { build_user }
+  let(:existing_user) { create_user }
+  let(:signup_url) { '/signup' }
   let(:params) do
     {
       email: user.email,
@@ -29,7 +30,7 @@ describe Users::RegistrationsController, type: :request do
     end
 
     it 'returns the user email' do
-      expect(json["email"]).to eq(user.email)
+      expect(json['email']).to eq(user.email)
     end
   end
 
@@ -45,12 +46,11 @@ describe Users::RegistrationsController, type: :request do
     end
 
     it 'should return a error message' do
-      expect(response.body).to include("has already been taken")
+      expect(response.body).to include('has already been taken')
     end
 
     it 'returns 422' do
       expect(response.status).to eq(422)
     end
   end
-
 end
