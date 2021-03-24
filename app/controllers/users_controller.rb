@@ -6,9 +6,12 @@ class UsersController < ApplicationController
   before_action :set_user, only: %i[show update destroy update_password]
 
   def index
-    @users = current_user.admin? ? User.all : current_user
+    @users = current_user
+    @total_pages, @total_entries = 1, 1
+    set_variables if current_user.admin?
     render json: {
       status: { code: 200, message: 'Success.' },
+      meta: { total_pages: @total_pages, total_entries: @total_entries },
       data: UserSerializer.new(@users).serializable_hash[:data]
     }
   end
@@ -90,5 +93,11 @@ class UsersController < ApplicationController
         user: "Record not found for ID #{params[:id]}"
       }
     }, status: 400
+  end
+
+  def set_variables
+    @users = User.paginate(page: params[:page], per_page: 10)
+    @total_pages = @users.total_pages
+    @total_entries = @users.total_entries
   end
 end

@@ -24,18 +24,22 @@ gem 'bootsnap', '>= 1.4.4', require: false
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 gem 'rack-cors'
-
+# Devise for authorization
 gem 'devise'
+# Jwt for token based api access
 gem 'devise-jwt'
+# Serialize data more easily
 gem 'fast_jsonapi'
-
+# Validates email
 gem 'email_validator'
-
+# For role based access
 gem "pundit"
-
+# Email templates can be made easily using bootstrap
 gem 'bootstrap-email', ">= 1.0.0.alpha"
-
+# Robocop for ruby code and style analysis
 gem 'rubocop', require: false
+# Will paginate for listings
+gem 'will_paginate'
 
 
 group :development, :test do
