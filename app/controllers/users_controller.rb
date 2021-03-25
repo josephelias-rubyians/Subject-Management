@@ -27,8 +27,12 @@ class UsersController < ApplicationController
   def update
     return unless authorize @user
 
-    @user.update(user_params)
-    render_success_response('Successfully updated the profile.', true)
+    begin
+      @user.update(user_params)
+      render_success_response('Successfully updated the profile.', true)
+    rescue Exception => e
+      render_failed_response(e.message)
+    end
   end
 
   def destroy
