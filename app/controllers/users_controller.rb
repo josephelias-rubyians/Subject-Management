@@ -3,7 +3,8 @@
 # Users contoller for list, update, destroy etc
 class UsersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_user, only: %i[show update destroy update_password]
+  before_action :find_record, only: %i[destroy]
+  before_action :set_user, only: %i[show update update_password]
 
   def index
     @users = current_user
@@ -52,6 +53,12 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     render_failed_response("Record not found for ID #{params[:id]}")
+  end
+
+  def find_record
+    @user = User.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    render_success_response('Successfully deleted the profile.', false)
   end
 
   def set_variables
