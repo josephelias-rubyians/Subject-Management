@@ -22,16 +22,25 @@ gem 'puma', '~> 5.0'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
 
-gem "figaro"
-
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 gem 'rack-cors'
-
+# Devise for authorization
 gem 'devise'
+# Jwt for token based api access
 gem 'devise-jwt'
+# Serialize data more easily
 gem 'fast_jsonapi'
-
+# Validates email
 gem 'email_validator'
+# For role based access
+gem "pundit"
+# Email templates can be made easily using bootstrap
+gem 'bootstrap-email', ">= 1.0.0.alpha"
+# Robocop for ruby code and style analysis
+gem 'rubocop', require: false
+# Will paginate for listings
+gem 'will_paginate'
+
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -42,6 +51,7 @@ group :development, :test do
   gem 'faker'
   gem 'jsonapi-rspec'
   gem 'foreman'
+  gem 'database_cleaner-active_record'
 end
 
 group :development do

@@ -1,15 +1,19 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Users::RegistrationsController, type: :request do
-
-  let (:user) { build_user }
-  let (:existing_user) { create_user }
-  let (:signup_url) { '/signup' }
+  let(:user) { build_user }
+  let(:existing_user) { create_user }
+  let(:signup_url) { '/signup' }
   let(:params) do
     {
-      user: {
+      user:{
         email: user.email,
-        password: user.password
+        password: user.password,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        age: user.age
       }
     }
   end
@@ -28,23 +32,29 @@ describe Users::RegistrationsController, type: :request do
     end
 
     it 'returns the user email' do
-      expect(json["email"]).to eq(user.email)
+      expect(json['email']).to eq(user.email)
     end
   end
 
   context 'When an email already exists' do
     before do
       post signup_url, params: {
-        user: {
+        user:{
           email: existing_user.email,
-          password: existing_user.password
+          password: existing_user.password,
+          firstname: existing_user.firstname,
+          lastname: existing_user.lastname,
+          age: existing_user.age
         }
       }
+    end
+
+    it 'should return a error message' do
+      expect(response.body).to include('has already been taken')
     end
 
     it 'returns 422' do
       expect(response.status).to eq(422)
     end
   end
-
 end
