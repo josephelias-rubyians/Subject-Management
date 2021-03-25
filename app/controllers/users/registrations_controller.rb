@@ -18,7 +18,7 @@ module Users
     private
 
     def configure_sign_up_params
-      params.permit(:email, :password, :password_confirmation, :admin, :firstname, :lastname, :age, :avatar)
+      params.require(:user).permit(:email, :password, :admin, :firstname, :lastname, :age, :avatar)
     end
 
     def respond_with(resource, _opts = {})

@@ -1,15 +1,12 @@
-class UserPolicy
+# frozen_string_literal: true
 
-	attr_reader :current_user, :model
+class UserPolicy
+  attr_reader :current_user, :model
 
   def initialize(current_user, model)
     @current_user = current_user
     @user = model
   end
-
-  # def index?
-  #   @current_user.admin? ? User.all : @current_user
-  # end
 
   def show?
     action_performable?
@@ -23,14 +20,13 @@ class UserPolicy
     action_performable?
   end
 
-  def action_performable?
-  	if (@user == @current_user) && !(@current_user.admin?)
-  		true
-  	elsif !(@user == @current_user) && !(@current_user.admin?)
-  		false
-  	else
-  		true
-  	end
+  def update_password?
+    action_performable?
   end
 
+  def action_performable?
+    return true if @current_user.admin?
+
+    @user == @current_user
+  end
 end
