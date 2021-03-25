@@ -31,4 +31,9 @@ module UserHelpers
                      lastname: Faker::Name.last_name,
                      age: Faker::Number.number(digits: 2))
   end
+
+  def create_subject
+    FactoryBot.create(:subject,
+                      name: Faker::Educator.subject)
+  end
 end

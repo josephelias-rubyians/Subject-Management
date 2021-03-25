@@ -5,3 +5,7 @@ en:
       show?: 'You are not allowed to view the profile.'
       update?: 'You are not allowed to update the profile.'
       destroy?: 'You are not allowed to delete the profile.'
+    subject_policy:
+      create?: 'You are not allowed to create subjects.'
+      update?: 'You are not allowed to update the subject.'
+      destroy?: 'You are not allowed to delete the subject.'
