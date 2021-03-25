@@ -79,8 +79,10 @@ describe UsersController, type: :request do
       before do
         patch "/users/#{admin.id}",
               params: {
-                firstname: 'Joseph',
-                lastname: 'Elias'
+                'user': {
+                  firstname: 'Joseph',
+                  lastname: 'Elias'
+                }
               }.to_json, headers: headers
       end
 
@@ -97,8 +99,10 @@ describe UsersController, type: :request do
       before do
         patch "/users/#{teacher.id}",
               params: {
-                firstname: 'Teacher',
-                lastname: 'Tested'
+                'user': {
+                  firstname: 'Teacher',
+                  lastname: 'Tested'
+                }
               }.to_json, headers: headers
       end
 
@@ -179,7 +183,7 @@ describe UsersController, type: :request do
       end
 
       it 'should return a error message' do
-        expect(response.body).to include('Minimum 6 chars required')
+        expect(response.body).to include('Password is too short')
       end
     end
 
@@ -258,8 +262,10 @@ describe UsersController, type: :request do
       before do
         patch "/users/#{teacher.id}",
               params: {
-                firstname: 'Joseph',
-                lastname: 'Elias'
+                'user': {
+                  firstname: 'Joseph',
+                  lastname: 'Elias'
+                }
               }.to_json, headers: headers
       end
 
@@ -276,8 +282,10 @@ describe UsersController, type: :request do
       before do
         patch "/users/#{admin.id}",
               params: {
-                firstname: 'Admin',
-                lastname: 'Tested'
+                'user': {
+                  firstname: 'Admin',
+                  lastname: 'Tested'
+                }
               }.to_json, headers: headers
       end
 
@@ -357,7 +365,7 @@ describe UsersController, type: :request do
       end
 
       it 'should return a error message' do
-        expect(response.body).to include('incorrect confirm password')
+        expect(response.body).to include("Password confirmation doesn't match Password")
       end
     end
   end
