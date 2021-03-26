@@ -98,6 +98,26 @@ RSpec.describe "Subjects", type: :request do
       end
     end
 
+    describe 'When Admin create case sensitive duplicate subject record' do
+      before do
+        subject = create_subject
+        post '/subjects',
+             params: {
+               'subject': {
+                 name: subject.name.upcase
+               }
+             }.to_json, headers: headers
+      end
+
+      it 'returns 400' do
+        expect(response).to have_http_status(400)
+      end
+
+      it 'should return a error message' do
+        expect(response.body).to include('Subject already exists.')
+      end
+    end
+
     describe 'Admin can view any subjects' do
       before do
         3.times { create_subject }

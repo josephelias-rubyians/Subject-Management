@@ -24,11 +24,12 @@ class SubjectsController < ApplicationController
   def create
     @subject = Subject.new(subject_params)
     return unless authorize @subject
-
-    @subject.save!
-    render_success_response('success.', true)
-    rescue ActiveRecord::RecordInvalid => e
-      render_failed_response(e.message.gsub('Validation failed: Name', ''))
+    
+    if @subject.save
+      render_success_response('success.', true)
+    else
+      render_failed_response(@subject.errors[:name][0])
+    end
   end
 
   def update
