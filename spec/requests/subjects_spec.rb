@@ -25,10 +25,10 @@ RSpec.describe "Subjects", type: :request do
       expect(response.headers['Authorization']).to be_present
     end
 
-    describe 'GET /subjects as admin' do
+    describe 'GET /subjects as admin by giving a page number within total page number' do
       before do
         2.times { create_subject }
-        get listing_url, headers: headers
+        get listing_url, params: { page: 1 }, headers: headers
       end
 
       it 'returns 200' do
@@ -37,6 +37,21 @@ RSpec.describe "Subjects", type: :request do
 
       it 'returns all subjects' do
         expect(JSON.parse(response.body)['data'].count).to eq(Subject.count)
+      end
+    end
+
+    describe 'GET /subjects as admin by giving a page number that exceeds total page number' do
+      before do
+        2.times { create_subject }
+        get listing_url, params: { page: 100 }, headers: headers
+      end
+
+      it 'returns 200' do
+        expect(response).to have_http_status(200)
+      end
+
+      it 'should not return any subjects' do
+        expect(JSON.parse(response.body)['data'].count).to eq(0)
       end
     end
 
@@ -56,6 +71,10 @@ RSpec.describe "Subjects", type: :request do
 
       it 'should return a success message' do
         expect(response.body).to include('success.')
+      end
+
+      it 'should include the created subject info' do
+        expect(JSON.parse(response.body)['data']['name']).to eq('English')
       end
     end
 
@@ -80,7 +99,7 @@ RSpec.describe "Subjects", type: :request do
         patch "/subjects/#{Subject.last.id}",
               params: {
                 'subject': {
-                  name: 'English'
+                  name: 'English-updated'
                 }
               }.to_json, headers: headers
       end
@@ -91,6 +110,10 @@ RSpec.describe "Subjects", type: :request do
 
       it 'should return a success message' do
         expect(response.body).to include('Successfully updated the subject.')
+      end
+
+      it 'should include the updated subject info' do
+        expect(JSON.parse(response.body)['data']['name']).to eq('English-updated')
       end
     end
 
@@ -123,10 +146,10 @@ RSpec.describe "Subjects", type: :request do
       expect(response.headers['Authorization']).to be_present
     end
 
-    describe 'GET /subjects as teacher' do
+    describe 'GET /subjects as teacher by giving a page number within total page number' do
       before do
         2.times { create_subject }
-        get listing_url, headers: headers
+        get listing_url, params: { page: 1 }, headers: headers
       end
 
       it 'returns 200' do
@@ -135,6 +158,21 @@ RSpec.describe "Subjects", type: :request do
 
       it 'returns all subjects' do
         expect(JSON.parse(response.body)['data'].count).to eq(Subject.count)
+      end
+    end
+
+    describe 'GET /subjects as teacher by giving a page number that exceeds total page number' do
+      before do
+        2.times { create_subject }
+        get listing_url, params: { page: 100 }, headers: headers
+      end
+
+      it 'returns 200' do
+        expect(response).to have_http_status(200)
+      end
+
+      it 'should not return any subjects' do
+        expect(JSON.parse(response.body)['data'].count).to eq(0)
       end
     end
 

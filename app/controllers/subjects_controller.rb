@@ -7,9 +7,12 @@ class SubjectsController < ApplicationController
   before_action :find_subject, only: %i[show update]
 
   def index
-    @subjects = Subject.all
+    @subjects = Subject.paginate(page: params[:page], per_page: 10)
+    @total_pages = @subjects.total_pages
+    @total_entries = @subjects.total_entries
     render json: {
       status: { code: 200, message: 'Success.' },
+      meta: { total_pages: @total_pages, total_entries: @total_entries },
       data: SubjectSerializer.new(@subjects).serializable_hash[:data]
     }
   end
