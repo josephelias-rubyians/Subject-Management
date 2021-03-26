@@ -27,16 +27,16 @@ RSpec.describe "Subjects", type: :request do
 
     describe 'GET /subjects as admin by giving a page number within total page number' do
       before do
-        2.times { create_subject }
-        get listing_url, params: { page: 1 }, headers: headers
+        25.times { create_subject }
+        get listing_url, params: { page: 2 }, headers: headers
       end
 
       it 'returns 200' do
         expect(response).to have_http_status(200)
       end
 
-      it 'returns all subjects' do
-        expect(JSON.parse(response.body)['data'].count).to eq(Subject.count)
+      it 'returns 10 subjects for page 2 since per page subjects is 10' do
+        expect(JSON.parse(response.body)['data'].count).to eq(10)
       end
     end
 
@@ -75,6 +75,26 @@ RSpec.describe "Subjects", type: :request do
 
       it 'should include the created subject info' do
         expect(JSON.parse(response.body)['data']['name']).to eq('English')
+      end
+    end
+
+    describe 'When Admin create duplicate subject record' do
+      before do
+        subject = create_subject
+        post '/subjects',
+             params: {
+               'subject': {
+                 name: subject.name
+               }
+             }.to_json, headers: headers
+      end
+
+      it 'returns 400' do
+        expect(response).to have_http_status(400)
+      end
+
+      it 'should return a error message' do
+        expect(response.body).to include('Subject already exists.')
       end
     end
 
@@ -148,16 +168,16 @@ RSpec.describe "Subjects", type: :request do
 
     describe 'GET /subjects as teacher by giving a page number within total page number' do
       before do
-        2.times { create_subject }
-        get listing_url, params: { page: 1 }, headers: headers
+        25.times { create_subject }
+        get listing_url, params: { page: 2 }, headers: headers
       end
 
       it 'returns 200' do
         expect(response).to have_http_status(200)
       end
 
-      it 'returns all subjects' do
-        expect(JSON.parse(response.body)['data'].count).to eq(Subject.count)
+      it 'returns 10 subjects for page 2 since per page subjects is 10' do
+        expect(JSON.parse(response.body)['data'].count).to eq(10)
       end
     end
 

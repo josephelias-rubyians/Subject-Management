@@ -5,7 +5,6 @@ require 'factory_bot_rails'
 
 module SubjectHelpers
   def create_subject
-    FactoryBot.create(:subject,
-                      name: Faker::Educator.subject)
+    FactoryBot.create(:subject)
   end
 end
