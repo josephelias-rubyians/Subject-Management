@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe UsersController, type: :request do
+RSpec.describe "Users", type: :request do
   let(:logout_url) { '/logout' }
   let(:admin) { create_admin_user }
   let(:teacher) { create_user }

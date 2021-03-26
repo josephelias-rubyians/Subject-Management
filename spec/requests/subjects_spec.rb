@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe SubjectsController, type: :request do
+RSpec.describe "Subjects", type: :request do
   let(:admin) { create_admin_user }
   let(:teacher) { create_user }
   let(:listing_url) { '/subjects' }

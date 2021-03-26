@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe Users::SessionsController, type: :request do
+RSpec.describe "User Session", type: :request do
   let(:user) { create_user }
   let(:login_url) { '/login' }
   let(:logout_url) { '/logout' }
