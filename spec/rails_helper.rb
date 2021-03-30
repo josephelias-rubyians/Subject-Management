@@ -86,6 +86,7 @@ RSpec.configure do |config|
   end
 
   config.include UserHelpers
+  config.include SubjectHelpers
   config.include ApiHelpers
   config.include JSONAPI::RSpec
   config.jsonapi_indifferent_hash = true

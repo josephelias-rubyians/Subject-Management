@@ -15,5 +15,6 @@ Rails.application.routes.draw do
   		post :update_password
   	end
 	end
-  
+
+	resources :subjects
 end

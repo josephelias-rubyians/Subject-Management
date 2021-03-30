@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe Users::RegistrationsController, type: :request do
+RSpec.describe "User Registration", type: :request do
   let(:user) { build_user }
   let(:existing_user) { create_user }
   let(:signup_url) { '/signup' }
