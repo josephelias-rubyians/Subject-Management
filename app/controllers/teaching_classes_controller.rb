@@ -71,13 +71,13 @@ class TeachingClassesController < ApplicationController
   end
 
   def assign_subjects_to_class
-    ids = params["teaching_class"]["subject_ids"].split(',').map(&:to_i)
+    ids = params['teaching_class']['subject_ids'].split(',').map(&:to_i)
     subjects = Subject.find(ids)
     @teaching_class.subjects << subjects
   end
 
   def remove_subjects_from_class
-    ids = params["teaching_class"]["remove_ids"].split(',').map(&:to_i)
+    ids = params['teaching_class']['remove_ids'].split(',').map(&:to_i)
     subjects = SubAndClass.where('subject_id IN (?) AND teaching_class_id = ?', ids, @teaching_class.id)
     subjects.delete_all
   end
