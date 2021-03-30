@@ -265,7 +265,7 @@ RSpec.describe "Subjects", type: :request do
         expect(response).to have_http_status(400)
       end
 
-      it 'should return a success message' do
+      it 'should return a error message' do
         expect(response.body).to include('You are not allowed to update the subject.')
       end
     end
@@ -280,7 +280,7 @@ RSpec.describe "Subjects", type: :request do
         expect(response).to have_http_status(400)
       end
 
-      it 'should return a success message' do
+      it 'should return a error message' do
         expect(response.body).to include('You are not allowed to delete the subject.')
       end
     end
