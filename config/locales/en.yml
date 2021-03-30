@@ -9,3 +9,7 @@ en:
       create?: 'You are not allowed to create subjects.'
       update?: 'You are not allowed to update the subject.'
       destroy?: 'You are not allowed to delete the subject.'
+    teaching_class_policy:
+      create?: 'You are not allowed to create teaching class.'
+      update?: 'You are not allowed to update teaching class.'
+      destroy?: 'You are not allowed to delete teaching class.'

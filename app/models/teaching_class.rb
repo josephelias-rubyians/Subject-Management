@@ -3,5 +3,6 @@ class TeachingClass < ApplicationRecord
 	has_many :subjects, through: :sub_and_classes
 
 	validates :name, presence: true
+	validates :name, uniqueness: { case_sensitive: false, message: "Class already exists." }
 
 end
