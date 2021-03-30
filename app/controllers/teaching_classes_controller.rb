@@ -36,6 +36,8 @@ class TeachingClassesController < ApplicationController
     return unless authorize @teaching_class
 
     begin
+      assign_subjects_to_class if params[:teaching_class][:subject_ids].present?
+      remove_subjects_from_class if params[:teaching_class][:remove_ids].present?
       @teaching_class.update(teaching_class_params)
       render_success_response('Successfully updated the class.', true)
     rescue Exception => e
@@ -68,6 +70,18 @@ class TeachingClassesController < ApplicationController
     render_failed_response("Record not found for ID #{params[:id]}")
   end
 
+  def assign_subjects_to_class
+    ids = params["teaching_class"]["subject_ids"].split(',').map(&:to_i)
+    subjects = Subject.find(ids)
+    @teaching_class.subjects << subjects
+  end
+
+  def remove_subjects_from_class
+    ids = params["teaching_class"]["remove_ids"].split(',').map(&:to_i)
+    subjects = SubAndClass.where('subject_id IN (?) AND teaching_class_id = ?', ids, @teaching_class.id)
+    subjects.delete_all
+  end
+
   def render_failed_response(msg)
     render json: {
       error: msg
@@ -77,7 +91,7 @@ class TeachingClassesController < ApplicationController
   def render_success_response(msg, show_data)
     resp = {}
     resp['status'] = { code: 200, message: msg }
-    resp['data'] = TeachingClassSerializer.new(@teaching_class).serializable_hash[:data][:attributes] if show_data
+    resp['data'] = TeachingClassSerializer.new(@teaching_class).serializable_hash[:data] if show_data
     render json: resp
   end
 end
