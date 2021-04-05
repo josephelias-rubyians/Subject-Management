@@ -18,4 +18,6 @@ Rails.application.routes.draw do
 
 	resources :subjects
 	resources :teaching_classes
+	resources :subject_and_classes, only: [:create]
+	delete '/subject_and_classes', to: 'subject_and_classes#remove_subject_and_classes'
 end

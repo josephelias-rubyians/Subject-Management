@@ -78,61 +78,6 @@ RSpec.describe 'TeachingClasses', type: :request do
       end
     end
 
-    describe 'Admin can assign subjects to class' do
-      before do
-        teaching_class = create_teaching_class
-        subject_ids = []
-        2.times { subject_ids << create_subject.id }
-        patch "/teaching_classes/#{teaching_class.id}",
-              params: {
-                'teaching_class': {
-                  subject_ids: subject_ids.join(',')
-                }
-              }.to_json, headers: headers
-      end
-
-      it 'returns 200' do
-        expect(response).to have_http_status(200)
-      end
-
-      it 'should return a success message' do
-        expect(response.body).to include('Successfully updated the class.')
-      end
-
-      it 'should return the assigned subjects' do
-        expect(JSON.parse(response.body)['data']['relationships']['subjects']['data'].size).to eq(2)
-      end
-
-      it 'should return the assigned subjects id and its type' do
-        expect(JSON.parse(response.body)['data']['relationships']['subjects']['data']).to include(
-          { 'id' => Subject.first.id.to_s, 'type' => 'subject' }, { 'id' => Subject.last.id.to_s, 'type' => 'subject' }
-        )
-      end
-    end
-
-    describe 'When admin assigns already assigned subjects to a class' do
-      before do
-        teaching_class = create_teaching_class
-        subject_ids = []
-        2.times { subject_ids << create_subject.id }
-        teaching_class.subject_ids = subject_ids
-        patch "/teaching_classes/#{teaching_class.id}",
-              params: {
-                'teaching_class': {
-                  subject_ids: subject_ids.join(',')
-                }
-              }.to_json, headers: headers
-      end
-
-      it 'returns status 400' do
-        expect(response).to have_http_status(400)
-      end
-
-      it 'should return a error message' do
-        expect(response.body).to include('Subject has already been taken')
-      end
-    end
-
     describe 'When Admin create duplicate teaching class' do
       before do
         teaching_class = create_teaching_class
