@@ -31,10 +31,6 @@ class SubjectAndClassesController < ApplicationController
 
   private
 
-  def subject_and_class_params
-    params.require(:subject_and_class).permit(:subject_id, :teaching_class_id)
-  end
-
   def find_class
     @teaching_class = TeachingClass.find(params['subject_and_class']['teaching_class_id'])
   rescue ActiveRecord::RecordNotFound
