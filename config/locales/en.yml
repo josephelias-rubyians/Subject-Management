@@ -16,3 +16,6 @@ en:
     subject_and_class_policy:
       create?: 'You are not allowed to add subjects to the class.'
       remove_subject_and_classes?: 'You are not allowed to delete subjects from class.'
+    user_and_subject_policy:
+      create?: 'You are not allowed to add subjects to other user profile.'
+      remove_user_and_subjects?: 'You are not allowed to delete subjects from other user profile.'
