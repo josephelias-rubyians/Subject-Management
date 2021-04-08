@@ -6,5 +6,5 @@ class UserSerializer
   end
 
   has_many :subjects
-
+  has_many :user_classes_subjects
 end

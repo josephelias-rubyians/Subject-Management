@@ -22,4 +22,6 @@ Rails.application.routes.draw do
 	delete '/subject_and_classes', to: 'subject_and_classes#remove_subject_and_classes'
 	resources :user_and_subjects, only: [:create]
 	delete '/user_and_subjects', to: 'user_and_subjects#remove_user_and_subjects'
+	resources :user_classes_subjects, only: [:create]
+	delete '/user_classes_subjects', to: 'user_classes_subjects#remove_user_classes_subjects'
 end

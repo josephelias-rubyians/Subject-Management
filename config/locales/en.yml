@@ -19,3 +19,6 @@ en:
     user_and_subject_policy:
       create?: 'You are not allowed to add subjects to other user profile.'
       remove_user_and_subjects?: 'You are not allowed to delete subjects from other user profile.'
+    user_classes_subject_policy:
+      create?: 'Only admin can assign subject and class to a user, contact your admin.'
+      remove_user_classes_subjects?: 'Only admin can remove subject and class from user, contact your admin.'
