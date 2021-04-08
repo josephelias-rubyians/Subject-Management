@@ -3,7 +3,7 @@
 # SubjectAndClasses contoller for create and delete
 class SubjectAndClassesController < ApplicationController
   before_action :authenticate_user!
-  before_action :find_class, only: %i[create remove_subject_and_classes]
+  before_action :find_class, only: %i[create]
   before_action :find_subjects, only: %i[create]
   before_action :find_class_and_subjects, only: %i[remove_subject_and_classes]
 
@@ -23,7 +23,7 @@ class SubjectAndClassesController < ApplicationController
 
     begin
       @class_and_subjects.delete_all
-      render_success_response('Successfully updated the class.', true)
+      render_success_response('Successfully removed subjects from the class.', true)
     rescue ActiveRecord::RecordNotFound
       render_failed_response('Failed to remove subjects.')
     end
@@ -45,8 +45,8 @@ class SubjectAndClassesController < ApplicationController
   end
 
   def find_class_and_subjects
-    ids = params['subject_and_class']['subject_ids'].split(',').map(&:to_i)
-    @class_and_subjects = SubAndClass.where(subject_id: ids, teaching_class_id: @teaching_class.id)
+    ids = params['subject_and_class']['ids'].split(',').map(&:to_i)
+    @class_and_subjects = SubAndClass.where(id: ids)
   rescue ActiveRecord::RecordNotFound
     render_failed_response('Failed to find class and subjects.')
   end
@@ -60,7 +60,7 @@ class SubjectAndClassesController < ApplicationController
   def render_success_response(msg, show_data)
     resp = {}
     resp['status'] = { code: 200, message: msg }
-    resp['data'] = TeachingClassSerializer.new(@teaching_class).serializable_hash[:data] if show_data
+    resp['data'] = SubjectAndClassSerializer.new(@teaching_class.sub_and_classes).serializable_hash[:data] if show_data && @teaching_class.present?
     render json: resp
   end
 end
