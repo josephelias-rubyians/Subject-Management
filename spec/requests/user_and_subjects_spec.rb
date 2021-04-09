@@ -5,6 +5,7 @@ require 'rails_helper'
 RSpec.describe 'UserAndSubjects', type: :request do
   let(:admin) { create_admin_user }
   let(:teacher) { create_user }
+  let(:other_user) { create_user }
   let(:headers) do
     {
       'CONTENT_TYPE' => 'application/json',
@@ -38,20 +39,18 @@ RSpec.describe 'UserAndSubjects', type: :request do
       end
 
       it 'should return the assigned subjects' do
-        expect(JSON.parse(response.body)['data']['relationships']['subjects']['data'].size).to eq(2)
+        expect(JSON.parse(response.body)['data'].size).to eq(2)
       end
 
       it 'should return the assigned subjects id and its type' do
-        expect(JSON.parse(response.body)['data']['relationships']['subjects']['data']).to include(
-          { 'id' => Subject.first.id.to_s,
-            'type' => 'subject' }, { 'id' => Subject.last.id.to_s, 'type' => 'subject' }
-        )
+        data = json_response(admin)
+        expect(JSON.parse(response.body)['data']).to eq(data)
       end
     end
 
     describe 'Admin can add subjects to other users' do
       before do
-        assign_subjects_to(create_user, false)
+        assign_subjects_to(other_user, false)
       end
 
       it 'returns 200' do
@@ -63,10 +62,8 @@ RSpec.describe 'UserAndSubjects', type: :request do
       end
 
       it 'should return the assigned subjects id and its type' do
-        expect(JSON.parse(response.body)['data']['relationships']['subjects']['data']).to include(
-          { 'id' => Subject.first.id.to_s,
-            'type' => 'subject' }, { 'id' => Subject.last.id.to_s, 'type' => 'subject' }
-        )
+        data = json_response(other_user)
+        expect(JSON.parse(response.body)['data']).to eq(data)
       end
     end
 
@@ -86,7 +83,7 @@ RSpec.describe 'UserAndSubjects', type: :request do
 
     describe 'Admin can remove subjects from other users' do
       before do
-        remove_subjects_from(create_user)
+        remove_subjects_from(other_user)
       end
 
       it 'returns 200' do
@@ -94,11 +91,7 @@ RSpec.describe 'UserAndSubjects', type: :request do
       end
 
       it 'should return a success message' do
-        expect(response.body).to include('Successfully updated the profile.')
-      end
-
-      it 'should removes all allocated subjects' do
-        expect(JSON.parse(response.body)['data']['relationships']['subjects']['data']).to be_empty
+        expect(response.body).to include('Successfully removed subjects from the profile.')
       end
     end
   end
@@ -130,9 +123,8 @@ RSpec.describe 'UserAndSubjects', type: :request do
       end
 
       it 'should return the assigned subjects id and its type' do
-        expect(JSON.parse(response.body)['data']['relationships']['subjects']['data']).to include(
-          { 'id' => Subject.first.id.to_s, 'type' => 'subject' }, { 'id' => Subject.last.id.to_s, 'type' => 'subject' }
-        )
+        data = json_response(teacher)
+        expect(JSON.parse(response.body)['data']).to eq(data)
       end
     end
 
@@ -160,17 +152,13 @@ RSpec.describe 'UserAndSubjects', type: :request do
       end
 
       it 'should return a success message' do
-        expect(response.body).to include('Successfully updated the profile.')
-      end
-
-      it 'should removes all allocated subjects' do
-        expect(JSON.parse(response.body)['data']['relationships']['subjects']['data']).to be_empty
+        expect(response.body).to include('Successfully removed subjects from the profile.')
       end
     end
 
     describe 'Teacher cannot add subjects to other profile' do
       before do
-        assign_subjects_to(create_user, false)
+        assign_subjects_to(other_user, false)
       end
 
       it 'returns 400' do
@@ -184,7 +172,7 @@ RSpec.describe 'UserAndSubjects', type: :request do
 
     describe 'Teacher cannot remove subjects from other profile' do
       before do
-        remove_subjects_from(create_user)
+        remove_subjects_from(other_user)
       end
 
       it 'returns 400' do
@@ -218,9 +206,29 @@ RSpec.describe 'UserAndSubjects', type: :request do
     delete '/user_and_subjects',
            params: {
              'user_and_subject': {
-               user_id: user.id,
-               subject_ids: subject_ids.join(',')
+               ids: UserAndSubject.last.id.to_s
              }
            }.to_json, headers: headers
+  end
+
+  def json_response(user)
+    [{ 'id' => UserAndSubject.first.id.to_s,
+       'type' => 'user_and_subject',
+       'attributes' =>
+     { 'id' => UserAndSubject.first.id,
+       'created_at' => UserAndSubject.first.created_at.as_json,
+       'user' => { 'id' => user.id, 'first_name' => user.firstname, 'last_name' => user.lastname,
+                   'created_at' => user.created_at.as_json },
+       'subject' => { 'id' => Subject.first.id, 'name' => Subject.first.name,
+                      'created_at' => Subject.first.created_at.as_json } } },
+     { 'id' => UserAndSubject.last.id.to_s,
+       'type' => 'user_and_subject',
+       'attributes' =>
+       { 'id' => UserAndSubject.last.id,
+         'created_at' => UserAndSubject.last.created_at.as_json,
+         'user' => { 'id' => user.id, 'first_name' => user.firstname, 'last_name' => user.lastname,
+                     'created_at' => user.created_at.as_json },
+         'subject' => { 'id' => Subject.last.id, 'name' => Subject.last.name,
+                        'created_at' => Subject.last.created_at.as_json } } }]
   end
 end

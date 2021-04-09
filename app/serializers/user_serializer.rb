@@ -4,7 +4,4 @@ class UserSerializer
   attribute :avatar do |object|
     ActiveStorage::Blob.service.path_for(object.avatar.key) if object.avatar.attached?
   end
-
-  has_many :subjects
-
 end
