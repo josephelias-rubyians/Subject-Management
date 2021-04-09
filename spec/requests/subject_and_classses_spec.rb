@@ -38,13 +38,37 @@ RSpec.describe 'SubjectAndClassses', type: :request do
       end
 
       it 'should return the assigned subjects' do
-        expect(JSON.parse(response.body)['data']['relationships']['subjects']['data'].size).to eq(2)
+        expect(JSON.parse(response.body)['data'].size).to eq(2)
       end
 
-      it 'should return the assigned subjects id and its type' do
-        expect(JSON.parse(response.body)['data']['relationships']['subjects']['data']).to include(
-          { 'id' => Subject.first.id.to_s, 'type' => 'subject' }, { 'id' => Subject.last.id.to_s, 'type' => 'subject' }
-        )
+      it 'should return the assigned subjects and class details and its type' do
+        data = [{
+          'id' => SubAndClass.first.id.to_s,
+          'type' => 'subject_and_class',
+          'attributes' =>
+                  {
+                    'id' => SubAndClass.first.id,
+                    'created_at' => SubAndClass.first.created_at.as_json,
+                    'subject' => { 'id' => Subject.first.id, 'name' => Subject.first.name.to_s,
+                                   'created_at' => Subject.first.created_at.as_json, 'updated_at' => Subject.first.updated_at.as_json },
+                    'teaching_class' => { 'id' => TeachingClass.first.id, 'name' => TeachingClass.first.name.to_s,
+                                          'created_at' => TeachingClass.first.created_at.as_json, 'updated_at' => TeachingClass.first.updated_at.as_json }
+                  }
+        },
+                {
+                  'id' => SubAndClass.last.id.to_s,
+                  'type' => 'subject_and_class',
+                  'attributes' =>
+                  {
+                    'id' => SubAndClass.last.id,
+                    'created_at' => SubAndClass.last.created_at.as_json,
+                    'subject' => { 'id' => Subject.last.id, 'name' => Subject.last.name.to_s,
+                                   'created_at' => Subject.last.created_at.as_json, 'updated_at' => Subject.last.updated_at.as_json },
+                    'teaching_class' => { 'id' => TeachingClass.last.id, 'name' => TeachingClass.last.name.to_s,
+                                          'created_at' => TeachingClass.last.created_at.as_json, 'updated_at' => TeachingClass.last.updated_at.as_json }
+                  }
+                }]
+        expect(JSON.parse(response.body)['data']).to eq(data)
       end
     end
 
@@ -72,17 +96,7 @@ RSpec.describe 'SubjectAndClassses', type: :request do
       end
 
       it 'should return a success message' do
-        expect(response.body).to include('Successfully updated the class.')
-      end
-
-      it 'should return the assigned subjects' do
-        expect(JSON.parse(response.body)['data']['relationships']['subjects']['data'].size).to eq(1)
-      end
-
-      it 'should return the assigned subjects id and its type' do
-        expect(JSON.parse(response.body)['data']['relationships']['subjects']['data']).to include(
-          { 'id' => Subject.last.id.to_s, 'type' => 'subject' }
-        )
+        expect(response.body).to include('Successfully removed subjects from the class.')
       end
     end
   end
@@ -152,8 +166,7 @@ RSpec.describe 'SubjectAndClassses', type: :request do
     delete '/subject_and_classes',
            params: {
              'subject_and_class': {
-               teaching_class_id: teaching_class.id,
-               subject_ids: subject_ids.first.to_s
+               ids: SubAndClass.first.id.to_s
              }
            }.to_json, headers: headers
   end
