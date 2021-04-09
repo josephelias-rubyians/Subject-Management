@@ -50,9 +50,9 @@ RSpec.describe 'SubjectAndClassses', type: :request do
                     'id' => SubAndClass.first.id,
                     'created_at' => SubAndClass.first.created_at.as_json,
                     'subject' => { 'id' => Subject.first.id, 'name' => Subject.first.name.to_s,
-                                   'created_at' => Subject.first.created_at.as_json, 'updated_at' => Subject.first.updated_at.as_json },
+                                   'created_at' => Subject.first.created_at.as_json },
                     'teaching_class' => { 'id' => TeachingClass.first.id, 'name' => TeachingClass.first.name.to_s,
-                                          'created_at' => TeachingClass.first.created_at.as_json, 'updated_at' => TeachingClass.first.updated_at.as_json }
+                                          'created_at' => TeachingClass.first.created_at.as_json }
                   }
         },
                 {
@@ -63,9 +63,9 @@ RSpec.describe 'SubjectAndClassses', type: :request do
                     'id' => SubAndClass.last.id,
                     'created_at' => SubAndClass.last.created_at.as_json,
                     'subject' => { 'id' => Subject.last.id, 'name' => Subject.last.name.to_s,
-                                   'created_at' => Subject.last.created_at.as_json, 'updated_at' => Subject.last.updated_at.as_json },
+                                   'created_at' => Subject.last.created_at.as_json },
                     'teaching_class' => { 'id' => TeachingClass.last.id, 'name' => TeachingClass.last.name.to_s,
-                                          'created_at' => TeachingClass.last.created_at.as_json, 'updated_at' => TeachingClass.last.updated_at.as_json }
+                                          'created_at' => TeachingClass.last.created_at.as_json }
                   }
                 }]
         expect(JSON.parse(response.body)['data']).to eq(data)
