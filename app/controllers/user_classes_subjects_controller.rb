@@ -3,9 +3,9 @@
 # UserClassesSubjects contoller for create and delete
 class UserClassesSubjectsController < ApplicationController
   before_action :authenticate_user!
-  before_action :find_user, only: %i[create remove_user_classes_subjects]
-  before_action :find_class, only: %i[create remove_user_classes_subjects]
-  before_action :find_subject, only: %i[create remove_user_classes_subjects]
+  before_action :find_user, only: %i[create]
+  before_action :find_class, only: %i[create]
+  before_action :find_subject, only: %i[create]
   before_action :class_has_the_subject?, only: %i[create]
   before_action :user_has_the_subject?, only: %i[create]
   before_action :find_user_class_subject, only: %i[remove_user_classes_subjects]
@@ -29,8 +29,8 @@ class UserClassesSubjectsController < ApplicationController
     return unless authorize :user_classes_subject, :remove_user_classes_subjects?
 
     begin
-      UserClassesSubject.destroy(@user_classes_subject.id)
-      render_success_response('Successfully updated the profile.', true)
+      @user_classes_subject.delete_all
+      render_success_response('Successfully removed assigned subject and class from profile.', true)
     rescue ActiveRecord::RecordNotFound, ArgumentError, NoMethodError
       render_failed_response('Failed to update the profile.')
     end
@@ -57,8 +57,8 @@ class UserClassesSubjectsController < ApplicationController
   end
 
   def find_user_class_subject
-    @user_classes_subject = UserClassesSubject.find_by(user_id: @user.id, subject_id: @subject.id,
-                                                       teaching_class_id: @teaching_class.id)
+    ids = params['user_classes_subject']['ids'].split(',').map(&:to_i)
+    @user_classes_subject = UserClassesSubject.where(id: ids)
   rescue ActiveRecord::RecordNotFound
     render_failed_response('Failed to find the record.')
   end
@@ -88,7 +88,10 @@ class UserClassesSubjectsController < ApplicationController
   def render_success_response(msg, show_data)
     resp = {}
     resp['status'] = { code: 200, message: msg }
-    resp['data'] = UserSerializer.new(@user).serializable_hash[:data] if show_data
+    if show_data && @user.present?
+      resp['data'] =
+        UserClassSubjectSerializer.new(@user.user_classes_subjects).serializable_hash[:data]
+    end
     render json: resp
   end
 end

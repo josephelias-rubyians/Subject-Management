@@ -38,10 +38,8 @@ RSpec.describe 'UserClassesSubjects', type: :request do
       end
 
       it 'should return the assigned class and subject id and its type' do
-        expect(JSON.parse(response.body)['data']['relationships']['user_classes_subjects']['data']).to include(
-          { 'id' => UserClassesSubject.first.id.to_s,
-            'type' => 'user_classes_subject' }
-        )
+        data = json_data(admin)
+        expect(JSON.parse(response.body)['data']).to eq(data)
       end
     end
 
@@ -97,7 +95,7 @@ RSpec.describe 'UserClassesSubjects', type: :request do
       end
 
       it 'should return a success message' do
-        expect(response.body).to include('Successfully updated the profile.')
+        expect(response.body).to include('Successfully removed assigned subject and class from profile.')
       end
     end
   end
@@ -171,15 +169,24 @@ RSpec.describe 'UserClassesSubjects', type: :request do
     user.subject_ids = subject_ids
     teaching_class.subject_ids = subject_ids
     # assigning subject and class for user
-    UserClassesSubject.create(user_id: user.id, subject_id: subject_ids.first, teaching_class_id: teaching_class.id)
+    rec = UserClassesSubject.create(user_id: user.id, subject_id: subject_ids.first, teaching_class_id: teaching_class.id)
     # calling delete api
     delete '/user_classes_subjects',
            params: {
              'user_classes_subject': {
-               user_id: user.id,
-               teaching_class_id: teaching_class.id,
-               subject_id: subject_ids.first
+               ids: rec.id.to_s,
              }
            }.to_json, headers: headers
+  end
+
+  def json_data(user)
+    [{"id"=>UserClassesSubject.first.id.to_s,
+      "type"=>"user_class_subject",
+      "attributes"=>
+       {"id"=>UserClassesSubject.first.id,
+        "created_at"=>UserClassesSubject.first.created_at.as_json,
+        "user"=>{"id"=>user.id, "first_name"=>user.firstname, "last_name"=>user.lastname, "created_at"=>user.created_at.as_json},
+        "teaching_class"=>{"id"=>TeachingClass.first.id, "name"=>TeachingClass.first.name, "created_at"=>TeachingClass.first.created_at.as_json},
+        "subject"=>{"id"=>Subject.first.id, "name"=>Subject.first.name, "created_at"=>Subject.first.created_at.as_json}}}]
   end
 end
