@@ -3,7 +3,7 @@
 # UserAndSubjects contoller for create and delete
 class UserAndSubjectsController < ApplicationController
   before_action :authenticate_user!
-  before_action :find_user, only: %i[create remove_user_and_subjects]
+  before_action :find_user, only: %i[create]
   before_action :find_subjects, only: %i[create]
   before_action :find_user_and_subjects, only: %i[remove_user_and_subjects]
 
@@ -19,11 +19,15 @@ class UserAndSubjectsController < ApplicationController
   end
 
   def remove_user_and_subjects
-    return unless authorize @obj
+    if @user_and_subjects.present?
+      @user_and_subjects.each do |user_and_subject|
+        return unless authorize user_and_subject
+      end
+    end
 
     begin
       @user_and_subjects.delete_all
-      render_success_response('Successfully updated the profile.', true)
+      render_success_response('Successfully removed subjects from the profile.', true)
     rescue ActiveRecord::RecordNotFound
       render_failed_response('Failed to remove subjects.')
     end
@@ -46,8 +50,8 @@ class UserAndSubjectsController < ApplicationController
   end
 
   def find_user_and_subjects
-    ids = params['user_and_subject']['subject_ids'].split(',').map(&:to_i)
-    @user_and_subjects = UserAndSubject.where(subject_id: ids, user_id: @user.id)
+    ids = params['user_and_subject']['ids'].split(',').map(&:to_i)
+    @user_and_subjects = UserAndSubject.where(id: ids)
   rescue ActiveRecord::RecordNotFound
     render_failed_response('Failed to find user and subjects.')
   end
@@ -66,7 +70,10 @@ class UserAndSubjectsController < ApplicationController
   def render_success_response(msg, show_data)
     resp = {}
     resp['status'] = { code: 200, message: msg }
-    resp['data'] = UserSerializer.new(@user).serializable_hash[:data] if show_data
+    if show_data && @user.present?
+      resp['data'] =
+        UserAndSubjectSerializer.new(@user.user_and_subjects).serializable_hash[:data]
+    end
     render json: resp
   end
 end
