@@ -74,7 +74,7 @@ RSpec.describe 'TeachingClasses', type: :request do
       end
 
       it 'should include the created teaching class info' do
-        expect(JSON.parse(response.body)['data']['name']).to eq('Class - 1')
+        expect(JSON.parse(response.body)['data']['attributes']['name']).to eq('Class - 1')
       end
     end
 
@@ -129,7 +129,7 @@ RSpec.describe 'TeachingClasses', type: :request do
       end
 
       it 'should return the teaching class info' do
-        expect(JSON.parse(response.body)['data']['name']).to eq(TeachingClass.last.name)
+        expect(JSON.parse(response.body)['data']['attributes']['name']).to eq(TeachingClass.last.name)
       end
     end
 
@@ -153,7 +153,7 @@ RSpec.describe 'TeachingClasses', type: :request do
       end
 
       it 'should include the updated teaching class info' do
-        expect(JSON.parse(response.body)['data']['name']).to eq('Class-updated')
+        expect(JSON.parse(response.body)['data']['attributes']['name']).to eq('Class-updated')
       end
     end
 
@@ -246,7 +246,7 @@ RSpec.describe 'TeachingClasses', type: :request do
       end
 
       it 'should return the teaching class info' do
-        expect(JSON.parse(response.body)['data']['name']).to eq(TeachingClass.last.name)
+        expect(JSON.parse(response.body)['data']['attributes']['name']).to eq(TeachingClass.last.name)
       end
     end
 

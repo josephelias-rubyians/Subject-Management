@@ -13,3 +13,6 @@ en:
       create?: 'You are not allowed to create teaching class.'
       update?: 'You are not allowed to update teaching class.'
       destroy?: 'You are not allowed to delete teaching class.'
+    subject_and_class_policy:
+      create?: 'You are not allowed to add subjects to the class.'
+      remove_subject_and_classes?: 'You are not allowed to delete subjects from class.'

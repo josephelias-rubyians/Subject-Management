@@ -77,7 +77,7 @@ class TeachingClassesController < ApplicationController
   def render_success_response(msg, show_data)
     resp = {}
     resp['status'] = { code: 200, message: msg }
-    resp['data'] = TeachingClassSerializer.new(@teaching_class).serializable_hash[:data][:attributes] if show_data
+    resp['data'] = TeachingClassSerializer.new(@teaching_class).serializable_hash[:data] if show_data
     render json: resp
   end
 end
