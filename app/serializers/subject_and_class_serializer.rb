@@ -9,7 +9,8 @@ class SubjectAndClassSerializer
     {
       id: object.subject.id,
       name: object.subject.name,
-      created_at: object.subject.created_at
+      created_at: object.subject.created_at,
+      updated_at: object.subject.updated_at
     }
   end
 
@@ -17,7 +18,8 @@ class SubjectAndClassSerializer
     {
       id: object.teaching_class.id,
       name: object.teaching_class.name,
-      created_at: object.teaching_class.created_at
+      created_at: object.teaching_class.created_at,
+      updated_at: object.teaching_class.updated_at
     }
   end
 end

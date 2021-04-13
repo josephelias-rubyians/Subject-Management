@@ -5,6 +5,8 @@ require 'rails_helper'
 RSpec.describe 'SubjectAndClassses', type: :request do
   let(:admin) { create_admin_user }
   let(:teacher) { create_user }
+  let(:teaching_class) { create_teaching_class }
+  let(:remove_teaching_class) { create_teaching_class }
   let(:headers) do
     {
       'CONTENT_TYPE' => 'application/json',
@@ -45,14 +47,17 @@ RSpec.describe 'SubjectAndClassses', type: :request do
         data = [{
           'id' => SubAndClass.first.id.to_s,
           'type' => 'subject_and_class',
+
           'attributes' =>
                   {
+
                     'id' => SubAndClass.first.id,
                     'created_at' => SubAndClass.first.created_at.as_json,
                     'subject' => { 'id' => Subject.first.id, 'name' => Subject.first.name.to_s,
-                                   'created_at' => Subject.first.created_at.as_json },
+                                   'created_at' => Subject.first.created_at.as_json, 'updated_at' => Subject.first.updated_at.as_json },
                     'teaching_class' => { 'id' => TeachingClass.first.id, 'name' => TeachingClass.first.name.to_s,
-                                          'created_at' => TeachingClass.first.created_at.as_json }
+                                          'created_at' => TeachingClass.first.created_at.as_json, 'updated_at' => TeachingClass.first.updated_at.as_json }
+
                   }
         },
                 {
@@ -63,9 +68,10 @@ RSpec.describe 'SubjectAndClassses', type: :request do
                     'id' => SubAndClass.last.id,
                     'created_at' => SubAndClass.last.created_at.as_json,
                     'subject' => { 'id' => Subject.last.id, 'name' => Subject.last.name.to_s,
-                                   'created_at' => Subject.last.created_at.as_json },
+                                   'created_at' => Subject.last.created_at.as_json, 'updated_at' => Subject.last.updated_at.as_json },
                     'teaching_class' => { 'id' => TeachingClass.last.id, 'name' => TeachingClass.last.name.to_s,
-                                          'created_at' => TeachingClass.last.created_at.as_json }
+
+                                          'created_at' => TeachingClass.last.created_at.as_json, 'updated_at' => TeachingClass.last.updated_at.as_json }
                   }
                 }]
         expect(JSON.parse(response.body)['data']).to eq(data)
@@ -97,6 +103,10 @@ RSpec.describe 'SubjectAndClassses', type: :request do
 
       it 'should return a success message' do
         expect(response.body).to include('Successfully removed subjects from the class.')
+      end
+
+      it 'class subjects will be empty after deletion' do
+        expect(TeachingClass.last.subject_ids).to match_array([])
       end
     end
   end
@@ -145,7 +155,6 @@ RSpec.describe 'SubjectAndClassses', type: :request do
   # Rspec for teacher ends here
 
   def assign_subjects(pre_assign)
-    teaching_class = create_teaching_class
     subject_ids = []
     2.times { subject_ids << create_subject.id }
     teaching_class.subject_ids = subject_ids if pre_assign
@@ -159,14 +168,13 @@ RSpec.describe 'SubjectAndClassses', type: :request do
   end
 
   def remove_subjects
-    teaching_class = create_teaching_class
     subject_ids = []
     2.times { subject_ids << create_subject.id }
-    teaching_class.subject_ids = subject_ids
+    remove_teaching_class.subject_ids = subject_ids
     delete '/subject_and_classes',
            params: {
              'subject_and_class': {
-               ids: SubAndClass.first.id.to_s
+               ids: SubAndClass.ids.join(',')
              }
            }.to_json, headers: headers
   end
